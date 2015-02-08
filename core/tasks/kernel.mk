@@ -131,9 +131,14 @@ endef
 
 ifeq ($(TARGET_ARCH),arm)
     ifneq ($(USE_CCACHE),)
-      ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
-      # Check that the executable is here.
-      ccache := $(strip $(wildcard $(ccache)))
+        # Detect if the system already has ccache installed to use instead of the prebuilt
+        ccache := $(shell which ccache)
+
+        ifeq ($(ccache),)
+            ccache := $(ANDROID_BUILD_TOP)/prebuilts/misc/$(HOST_PREBUILT_TAG)/ccache/ccache
+            # Check that the executable is here.
+            ccache := $(strip $(wildcard $(ccache)))
+        endif
     endif
     ifneq ($(TARGET_KERNEL_CUSTOM_TOOLCHAIN),)
         ifeq ($(HOST_OS),darwin)
