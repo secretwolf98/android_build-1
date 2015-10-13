@@ -25,8 +25,8 @@ endif
 endif
 
 arch_variant_cflags += \
-    -mfloat-abi=softfp \
-    -mfpu=neon
+    -mfloat-abi=softfp -munaligned-access \
+    -mfpu=neon -mvectorize-with-neon-quad
 
 arch_variant_ldflags := \
 	-Wl,--fix-cortex-a8

@@ -23,14 +23,46 @@
 ### GENERAL SECTION ###
 #######################
 
+CC_OPTIMIZE_FOR_SIZE ?= false
+
+ifeq ($(CC_OPTIMIZE_FOR_SIZE),false)
+ARCHIDROID_GCC_CFLAGS := -O3
+else ifeq ($(CC_OPTIMIZE_FOR_SIZE),true)
+ARCHIDROID_GCC_CFLAGS := -Os
+else
+ARCHIDROID_GCC_CFLAGS := -O2
+endif
+
 # General optimization level of target ARM compiled with GCC. Default: -O2
-ARCHIDROID_GCC_CFLAGS_ARM := -O3
+ARCHIDROID_GCC_CFLAGS_ARM := $(ARCHIDROID_GCC_CFLAGS)
 
 # General optimization level of target THUMB compiled with GCC. Default: -Os
-ARCHIDROID_GCC_CFLAGS_THUMB := -O3
+ARCHIDROID_GCC_CFLAGS_THUMB := $(ARCHIDROID_GCC_CFLAGS_ARM)
 
 # Additional flags passed to all C targets compiled with GCC
-ARCHIDROID_GCC_CFLAGS := -O3 -fgcse-las -fgcse-sm -fipa-pta -fivopts -fomit-frame-pointer -frename-registers -fsection-anchors -ftracer -ftree-loop-im -ftree-loop-ivcanon -funsafe-loop-optimizations -funswitch-loops -fweb -Wno-error=array-bounds -Wno-error=clobbered -Wno-error=maybe-uninitialized -Wno-error=strict-overflow
+ARCHIDROID_GCC_CFLAGS += -pipe -funsafe-math-optimizations -ftree-vectorize \
+	-fno-prefetch-loop-arrays #-fdiagnostics-color -freorder-blocks-algorithm=simple
+
+ifeq ($(CC_OPTIMIZE_FOR_SIZE),false)
+ARCHIDROID_GCC_CFLAGS += \
+	-falign-functions=1 -falign-jumps=1 -falign-loops=1 -falign-labels=1
+else ifeq ($(CC_OPTIMIZE_FOR_SIZE),true)
+ARCHIDROID_GCC_CFLAGS += \
+	-finline-functions -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
+	-ftree-loop-vectorize -ftree-loop-distribute-patterns -ftree-slp-vectorize \
+	-fvect-cost-model -ftree-partial-pre -fipa-cp-clone \
+	-freorder-blocks -freorder-blocks-and-partition
+else
+ARCHIDROID_GCC_CFLAGS += \
+	-falign-functions=1 -falign-jumps=1 -falign-loops=1 -falign-labels=1 \
+	-finline-functions -funswitch-loops -fpredictive-commoning -fgcse-after-reload \
+	-ftree-loop-vectorize -ftree-loop-distribute-patterns -ftree-slp-vectorize \
+	-fvect-cost-model -ftree-partial-pre -fipa-cp-clone
+endif
+
+ARCHIDROID_GCC_CFLAGS += -fgcse-las -fgcse-sm -fipa-pta -fivopts -fomit-frame-pointer -fweb \
+	-fsection-anchors -ftracer -ftree-loop-im -ftree-loop-ivcanon -funsafe-loop-optimizations \
+	-Wno-error=array-bounds -Wno-error=clobbered -Wno-error=maybe-uninitialized -Wno-error=strict-overflow
 
 ############################
 ### EXPERIMENTAL SECTION ###
@@ -65,7 +97,13 @@ ARCHIDROID_GCC_LDFLAGS := -Wl,--sort-common
 #####################
 
 # Flags passed to all C targets compiled with CLANG
-ARCHIDROID_CLANG_CFLAGS := -O3 -Qunused-arguments -Wno-unknown-warning-option
+ARCHIDROID_CLANG_CFLAGS := $(ARCHIDROID_GCC_CFLAGS_ARM)
+
+ifneq ($(CC_OPTIMIZE_FOR_SIZE),false)
+ARCHIDROID_CLANG_CFLAGS += -argpromotion
+endif
+
+ARCHIDROID_CLANG_CFLAGS += -Qunused-arguments -Wno-unknown-warning-option
 
 # Flags passed to CLANG preprocessor for C and C++
 ARCHIDROID_CLANG_CPPFLAGS := $(ARCHIDROID_CLANG_CFLAGS)
@@ -100,11 +138,20 @@ ARCHIDROID_CLANG_UNKNOWN_FLAGS := \
   -ftree-loop-im \
   -ftree-loop-ivcanon \
   -funsafe-loop-optimizations \
-  -fweb
+  -fweb -fpredictive-commoning \
+  -ftree-loop-distribute-patterns \
+  -ftree-loop-vectorize -fipa-cp-clone \
+  -ftree-partial-pre -fvect-cost-model \
+  -falign-functions=1 -falign-jumps=1 \
+  -falign-loops=1 -falign-labels=1 \
+  -fdiagnostics-color
 
 #####################
 ### HACKS SECTION ###
 #####################
+
+# Quick testing for some of these optimization flags
+#$(error GCC: $(ARCHIDROID_GCC_CFLAGS); CLANG: $(ARCHIDROID_CLANG_CFLAGS); ARM: $(ARCHIDROID_GCC_CFLAGS_ARM); THUMB: $(ARCHIDROID_GCC_CFLAGS_THUMB))
 
 # Most of the flags are increasing code size of the output binaries, especially O3 instead of Os for target THUMB
 # This may become problematic for small blocks, especially for boot or recovery blocks (ramdisks)
@@ -116,4 +163,4 @@ ARCHIDROID_CLANG_UNKNOWN_FLAGS := \
 # Therefore, this seems like a safe approach (will only ignore check on recovery.img, without doing anything else)
 # However, if you use compiled recovery.img for your device, please disable this flag (comment or set to false), and lower
 # optimization levels instead
-ARCHIDROID_IGNORE_RECOVERY_SIZE := true
+ARCHIDROID_IGNORE_RECOVERY_SIZE ?= false
