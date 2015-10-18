@@ -533,6 +533,18 @@ function print_lunch_menu()
     echo
 }
 
+function dinner()
+{
+    breakfast $*
+    if [ $? -eq 0 ]; then
+        mke otapackage #bacon
+    else
+        echo "No such item in dinner menu. Try 'breakfast'"
+        return 1
+    fi
+    return $?
+}
+
 function brunch()
 {
     breakfast $*
