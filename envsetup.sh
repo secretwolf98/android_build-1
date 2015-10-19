@@ -1920,6 +1920,23 @@ function cmremote()
     echo You can now push to "cmremote".
 }
 
+function airmote()
+{
+    git remote rm airend 2> /dev/null
+    if [ ! -d .git ]
+    then
+        echo .git directory not found. Please run this from the root directory of the Android repository you wish to set up.
+    fi
+    PROJECT=`git config --get remote.github.projectname | sed s#CyanogenMod#airend#g`
+    if [ -z "$PROJECT" ]
+    then
+        echo Unable to find CM project, maybe an AOSP repo?
+        return 0
+    fi
+    git remote add airend git@github.com:$PROJECT.git
+    echo "Remote 'airend' created"
+}
+
 function aospremote()
 {
     git remote rm aosp 2> /dev/null
