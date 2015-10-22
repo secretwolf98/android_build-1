@@ -1487,6 +1487,10 @@ function make()
     return $ret
 }
 
+function mke() {
+    make -j6 "$@" && edone || efail
+}
+
 if [ "x$SHELL" != "x/bin/bash" ]; then
     case `ps -o command -p $$` in
         *bash*)
