@@ -71,6 +71,7 @@ function check_product()
         TARGET_BUILD_VARIANT= \
         TARGET_BUILD_TYPE= \
         TARGET_BUILD_APPS= \
+        export BUILD_NUMBER=$(date +%y%m%d)
         get_build_var TARGET_DEVICE > /dev/null
     # hide successful answers, but allow the errors to show
 }
