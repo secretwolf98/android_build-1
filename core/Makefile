@@ -10,7 +10,7 @@ ifneq "" "$(filter eng.%,$(BUILD_NUMBER))"
   # it will change every time.  Pick a stable value.
   FILE_NAME_TAG := eng.$(USER)
 else
-  FILE_NAME_TAG := $(BUILD_NUMBER)
+  FILE_NAME_TAG := $(BUILD_ID).$(BUILD_NUMBER)
 endif
 
 # -----------------------------------------------------------------
