@@ -23,7 +23,7 @@
 ### GENERAL SECTION ###
 #######################
 
-CC_OPTIMIZE_FOR_SIZE ?= false
+#CC_OPTIMIZE_FOR_SIZE ?= false
 
 ifeq ($(CC_OPTIMIZE_FOR_SIZE),false)
 ARCHIDROID_GCC_CFLAGS := -O3
