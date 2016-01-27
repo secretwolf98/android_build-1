@@ -58,6 +58,8 @@ CLANG_CONFIG_EXTRA_CFLAGS += \
   -fcolor-diagnostics
 
 CLANG_CONFIG_UNKNOWN_CFLAGS := \
+  -mvectorize-with-neon-double \
+  -mvectorize-with-neon-quad \
   -finline-functions \
   -finline-limit=64 \
   -fno-canonical-system-headers \
