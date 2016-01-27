@@ -44,4 +44,4 @@ endif
 endif
 
 arch_variant_cflags += \
-    -mfloat-abi=softfp
+    -mfloat-abi=softfp -munaligned-access -mvectorize-with-neon-quad
