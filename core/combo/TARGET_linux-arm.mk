@@ -138,10 +138,6 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += \
 			-Wl,--fatal-warnings \
 			-Wl,--icf=safe \
 			-Wl,--hash-style=gnu \
-			-Wl,-O3 -Wl,--relax \
-			-Wl,--gc-sections \
-			-Wl,--sort-common \
-			-Wl,--as-needed \
 			$(arch_variant_ldflags)
 
 $(combo_2nd_arch_prefix)TARGET_GLOBAL_CFLAGS += -mthumb-interwork

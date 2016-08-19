@@ -23,7 +23,7 @@ CLANG_CONFIG_EXTRA_ASFLAGS :=
 CLANG_CONFIG_EXTRA_CFLAGS :=
 CLANG_CONFIG_EXTRA_CONLYFLAGS := -std=gnu99
 CLANG_CONFIG_EXTRA_CPPFLAGS :=
-CLANG_CONFIG_EXTRA_LDFLAGS := -Wl,-O3 -Wl,--relax -Wl,--gc-sections -Wl,--sort-common -Wl,--as-needed
+CLANG_CONFIG_EXTRA_LDFLAGS :=
 
 CLANG_CONFIG_EXTRA_CFLAGS += \
   -D__compiler_offsetof=__builtin_offsetof
