@@ -136,6 +136,7 @@ $(combo_2nd_arch_prefix)TARGET_GLOBAL_LDFLAGS += \
 			-Wl,--build-id=md5 \
 			-Wl,--warn-shared-textrel \
 			-Wl,--fatal-warnings \
+			-fuse-ld=gold \
 			-Wl,--icf=safe \
 			-Wl,--hash-style=gnu \
 			-Wl,--no-undefined-version \
