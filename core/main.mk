@@ -383,6 +383,9 @@ ifdef TARGET_2ND_ARCH
   endif
 endif
 
+ADDITIONAL_DEFAULT_PROPERTIES += \
+    ro.device.cache_dir=$(if $(BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE),,/data)/cache
+
 ## user/userdebug ##
 
 user_variant := $(filter user userdebug,$(TARGET_BUILD_VARIANT))
