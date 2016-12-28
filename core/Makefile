@@ -2174,7 +2174,7 @@ ifeq ($(build_ota_package),true)
 # -----------------------------------------------------------------
 # OTA update package
 
-name := $(TARGET_PRODUCT)
+name := $(TARGET_PRODUCT:lineage_%=lnos_%)
 ifeq ($(TARGET_BUILD_TYPE),debug)
   name := $(name)_debug
 endif
