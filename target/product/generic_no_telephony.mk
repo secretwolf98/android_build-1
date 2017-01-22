@@ -22,7 +22,7 @@ PRODUCT_PACKAGES := \
     BluetoothMidiService \
     Camera2 \
     Gallery2 \
-    Music \
+    $(if $(wildcard packages/apps/Eleven/Android.mk),Eleven,Music) \
     MusicFX \
     OneTimeInitializer \
     Provision \
